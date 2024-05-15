@@ -88,6 +88,9 @@ export class EPub {
         ...chapter,
       });
       oebps.file(chapter.filename, rendered);
+      if (chapter.css) {
+        oebps.file(chapter.cssFileName, chapter.css);
+      }
     });
 
     const metainf = this.zip.folder('META-INF')!;

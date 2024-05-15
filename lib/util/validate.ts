@@ -3,11 +3,13 @@ import { Merge } from 'type-fest';
 
 export type Chapter = {
   title?: string,
+  css?: string,
   author?: string | string[],
   content: string,
   excludeFromToc?: boolean,
   beforeToc?: boolean,
   filename?: string,
+  cssFileName?: string,
   url?: string,
 };
 
