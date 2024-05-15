@@ -50,6 +50,9 @@
         
         <% content.forEach(function(content, index){ %>
         <item id="content_<%= index %>_<%= content.id %>" href="<%= content.filename %>" media-type="application/xhtml+xml" />
+            <% if(content.css) { %>
+                <item id="content_<%= index %>_<%= content.id %>_css" href="<%= content.cssFileName %>" media-type="text/css" />
+            <% } %>
         <% }) %>
 
         <% fonts.forEach(function(font, index){%>
