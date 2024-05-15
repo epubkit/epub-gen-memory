@@ -12,7 +12,10 @@ const fetchable = async (url: string, timeout: number) => {
   try {
     if (url.startsWith('file://'))
       return fs.readFile(new URL(url), { signal: controller.signal });
-    
+    if (url.startsWith("data:")) {
+      const base64 = url.split(',')[1];
+      return Buffer.from(base64, 'base64');
+    } 
     const res = await fetch(url, { signal: controller.signal });
     if (!res.ok)
       throw new Error(`Got error ${res.status} (${res.statusText}) while fetching ${url}`);
