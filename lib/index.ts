@@ -141,7 +141,9 @@ export class EPub {
     for (let i = 0; i < this.images.length; i += this.options.batchSize) {
       const imageContents = await Promise.all(
         this.images.slice(i, i + this.options.batchSize).map(image => {
-          const d = retryFetch(image.url, this.options.fetchTimeout, this.options.retryTimes, this.log)
+          const d = retryFetch(image.url, this.options.fetchTimeout, this.options.retryTimes, this.log, {
+            headers: this.options.imageFetcherHeaders,
+          })
             .then(res => (this.log(`Downloaded image ${image.url}`), { ...image, data: res }));
           return this.options.ignoreFailedDownloads
             ? d.catch(reason => (this.warn(`Warning (image ${image.url}): Download failed`, reason), { ...image, data: '' }))

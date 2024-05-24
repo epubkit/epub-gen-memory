@@ -45,6 +45,7 @@ export type Options = {
   batchSize?: number,
   ignoreFailedDownloads?: boolean,
   verbose?: boolean | LogFn,
+  imageFetcherHeaders?: Record<string, string>,
 };
 
 const name = ow.optional.any(ow.string, ow.array.ofType(ow.string), ow.undefined);
