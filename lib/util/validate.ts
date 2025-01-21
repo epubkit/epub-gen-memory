@@ -1,5 +1,6 @@
 import ow, { ObjectPredicate, Predicate } from 'ow';
 import { Merge } from 'type-fest';
+import { Image } from './';
 
 export type Chapter = {
   title?: string,
@@ -46,6 +47,7 @@ export type Options = {
   ignoreFailedDownloads?: boolean,
   verbose?: boolean | LogFn,
   imageFetcherHeaders?: (url: string) => Record<string, string>,
+  imageTransformer?: (image: Image) => Image,
 };
 
 const name = ow.optional.any(ow.string, ow.array.ofType(ow.string), ow.undefined);

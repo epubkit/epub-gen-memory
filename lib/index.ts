@@ -141,12 +141,13 @@ export class EPub {
     for (let i = 0; i < this.images.length; i += this.options.batchSize) {
       const imageContents = await Promise.all(
         this.images.slice(i, i + this.options.batchSize).map(image => {
-          const d = retryFetch(image.url, this.options.fetchTimeout, this.options.retryTimes, this.log, {
-            headers: this.options.imageFetcherHeaders?.(image.url),
+          const transformedImage = this.options.imageTransformer?.(image) || image
+          const d = retryFetch(transformedImage.url, this.options.fetchTimeout, this.options.retryTimes, this.log, {
+            headers: this.options.imageFetcherHeaders?.(transformedImage.url),
           })
-            .then(res => (this.log(`Downloaded image ${image.url}`), { ...image, data: res }));
+            .then(res => (this.log(`Downloaded image ${transformedImage.url}`), { ...transformedImage, data: res }));
           return this.options.ignoreFailedDownloads
-            ? d.catch(reason => (this.warn(`Warning (image ${image.url}): Download failed`, reason), { ...image, data: '' }))
+            ? d.catch(reason => (this.warn(`Warning (image ${transformedImage.url}): Download failed`, reason), { ...transformedImage, data: '' }))
             : d;
         })
       );

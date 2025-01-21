@@ -1,6 +1,6 @@
 {
   "name": "@epubkit/epub-gen-memory",
-  "version": "1.0.10-aplha.8",
+  "version": "1.0.10-aplha.9",
   "description": "A library to generate EPUB from HTML",
   "main": "dist/lib/index.js",
   "unpkg": "dist/bundle.min.js",
