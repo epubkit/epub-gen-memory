@@ -155,7 +155,10 @@ export class EPub {
             : d;
         })
       );
-      imageContents.forEach(image => images.file(`${image.id}.${image.extension}`, image.data));
+      imageContents.forEach(image => {
+        const transformedImage = this.options.imageTransformer?.(image) || image
+        images.file(`${transformedImage.id}.${transformedImage.extension}`, image.data);
+      });
     }
   }
 

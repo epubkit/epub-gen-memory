@@ -6,6 +6,7 @@ import { parseDocument } from 'htmlparser2';
 import type { EPub } from '..';
 import { allowedAttributes, allowedXhtml11Tags } from './constants';
 import type { CB } from './html';
+import type { Image } from './html';
 
 const allNodes = compile('*');
 const allImages = compile('img');

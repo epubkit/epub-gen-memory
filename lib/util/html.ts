@@ -24,7 +24,16 @@ function imgSrc(this: EPub, url: string) {
       id: uuid(),
       extension: getExtension(mediaType) || '',
     };
-    this.images.push(image);
+    if (this.options.imageTransformer) {
+      image = this.options.imageTransformer(image);
+    } else {
+      this.images.push(image);
+    }
+  }
+
+  if (this.options.imageTransformer) {
+    image = this.options.imageTransformer(image);
+    return `images/${image.id}.${image.extension}`;
   }
   return `images/${image.id}.${image.extension}`;
 }
