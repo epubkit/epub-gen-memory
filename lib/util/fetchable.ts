@@ -5,7 +5,9 @@ import { URL } from 'url';
 
 export const type = 'nodebuffer';
 
-const fetchable = async (url: string, timeout: number) => {
+const fetchable = async (url: string, timeout: number, options?: {
+  headers?: Record<string, string>,
+}) => {
   const controller = new AbortController();
   const out = setTimeout(() => controller.abort(), timeout);
 
@@ -16,7 +18,7 @@ const fetchable = async (url: string, timeout: number) => {
       const base64 = url.split(',')[1];
       return Buffer.from(base64, 'base64');
     } 
-    const res = await fetch(url, { signal: controller.signal });
+    const res = await fetch(url, { signal: controller.signal, headers: options?.headers});
     if (!res.ok)
       throw new Error(`Got error ${res.status} (${res.statusText}) while fetching ${url}`);
     return res.buffer();

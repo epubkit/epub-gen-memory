@@ -88,6 +88,9 @@ export class EPub {
         ...chapter,
       });
       oebps.file(chapter.filename, rendered);
+      if (chapter.css) {
+        oebps.file(chapter.cssFileName, chapter.css);
+      }
     });
 
     const metainf = this.zip.folder('META-INF')!;
@@ -119,7 +122,9 @@ export class EPub {
     for (let i = 0; i < this.options.fonts.length; i += this.options.batchSize) {
       const fontContents = await Promise.all(
         this.options.fonts.slice(i, i + this.options.batchSize).map(font => {
-          const d = retryFetch(font.url, this.options.fetchTimeout, this.options.retryTimes, this.log, this.options.urlValidator)
+          const d = retryFetch(font.url, this.options.fetchTimeout, this.options.retryTimes, this.log, {
+            urlValidator: this.options.urlValidator
+          })
             .then(res => (this.log(`Downloaded font ${font.url}`), { ...font, data: res }));
           return this.options.ignoreFailedDownloads
             ? d.catch(reason => (this.warn(`Warning (font ${font.url}): Download failed`, reason), { ...font, data: '' }))
@@ -138,10 +143,14 @@ export class EPub {
     for (let i = 0; i < this.images.length; i += this.options.batchSize) {
       const imageContents = await Promise.all(
         this.images.slice(i, i + this.options.batchSize).map(image => {
-          const d = retryFetch(image.url, this.options.fetchTimeout, this.options.retryTimes, this.log, this.options.urlValidator)
-            .then(res => (this.log(`Downloaded image ${image.url}`), { ...image, data: res }));
+          const transformedImage = this.options.imageTransformer?.(image) || image
+          const d = retryFetch(transformedImage.url, this.options.fetchTimeout, this.options.retryTimes, this.log, {
+            headers: this.options.imageFetcherHeaders?.(transformedImage.url),
+            urlValidator: this.options.urlValidator
+          })
+            .then(res => (this.log(`Downloaded image ${transformedImage.url}`), { ...transformedImage, data: res }));
           return this.options.ignoreFailedDownloads
-            ? d.catch(reason => (this.warn(`Warning (image ${image.url}): Download failed`, reason), { ...image, data: '' }))
+            ? d.catch(reason => (this.warn(`Warning (image ${transformedImage.url}): Download failed`, reason), { ...transformedImage, data: '' }))
             : d;
         })
       );
@@ -155,7 +164,9 @@ export class EPub {
     let coverContent: Buffer | string = ""
 
     if (this.options.cover.startsWith('http')) {
-      coverContent = await retryFetch(this.options.cover, this.options.fetchTimeout, this.options.retryTimes, this.log, this.options.urlValidator)
+      coverContent = await retryFetch(this.options.cover, this.options.fetchTimeout, this.options.retryTimes, this.log, {
+        urlValidator: this.options.urlValidator
+      })
         .catch(reason => (this.warn(`Warning (cover ${this.options.cover}): Download failed`, reason), ''));
     } else {
       coverContent = fs.readFileSync(this.options.cover)

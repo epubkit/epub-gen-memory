@@ -95,6 +95,16 @@ export const validateAndNormalizeChapter = (chapter: Chapter, index: number) => 
   } else if (!ch.filename.endsWith('.xhtml')) {
     ch.filename = `${ch.filename}.xhtml`;
   }
+
+  if (ch.css) {
+    if (!ch.cssFileName) {
+      ch.cssFileName = `${index}_${slug}.css`;
+    } else if (!ch.cssFileName.endsWith('.css')) {
+      ch.cssFileName = `${ch.cssFileName}.css`;
+    }
+  } else {
+    ch.cssFileName = ''
+  }
   ch.author = normName(ch.author);
   return ch;
 };

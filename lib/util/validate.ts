@@ -1,14 +1,17 @@
 import ow, { ObjectPredicate, Predicate } from 'ow';
 import { Merge } from 'type-fest';
 import { UrlValidator } from "./html";
+import { Image } from './';
 
 export type Chapter = {
   title?: string,
+  css?: string,
   author?: string | string[],
   content: string,
   excludeFromToc?: boolean,
   beforeToc?: boolean,
   filename?: string,
+  cssFileName?: string,
   url?: string,
 };
 
@@ -45,6 +48,8 @@ export type Options = {
   ignoreFailedDownloads?: boolean,
   verbose?: boolean | LogFn,
   urlValidator?: UrlValidator,
+  imageFetcherHeaders?: (url: string) => Record<string, string>,
+  imageTransformer?: (image: Image) => Image,
 };
 
 const name = ow.optional.any(ow.string, ow.array.ofType(ow.string), ow.undefined);
