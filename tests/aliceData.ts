@@ -11,6 +11,12 @@ export const optionsAlice: Options = {
   cover: "http://orig10.deviantart.net/e272/f/2013/255/0/0/alice_in_wonderland_book_cover_by_pannucabaguana-d6m003p.jpg",
   version: 3,
   verbose: true,
+  imageTransformer: (image) => {
+    return {
+      ...image,
+      url: `https://epubkit-image.pseudoyu.com/?url=${image.url}`
+    };
+  }
 };
 
 export const contentAlice: Chapter[] = [

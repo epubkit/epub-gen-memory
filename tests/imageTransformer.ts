@@ -3,24 +3,24 @@ import epub from '../lib';
 import type { Image } from '../lib/util';
 
 const imageTransformer = (image: Image): Image => {
-  // Transform image by adding a prefix to filename
+  // Transform image by adding a prefix and using the original URL as a parameter
   return {
     ...image,
-    url: `https://fly.webp.se/image?url=${image.url}`
+    url: `https://epubkit-image.pseudoyu.com/?url=${image.url}`
   };
 };
 
 (async () => {
   try {
     const content = await epub(
-      { 
+      {
         title: 'Image Transform Test',
         verbose: true,
         imageTransformer
       },
       [{
         content: `<p>Test image transformation</p>
-                 <img src="https://example.com/test.jpg">`
+                 <img src="http://www.alice-in-wonderland.net/wp-content/uploads/1book1.jpg">`
       }]
     );
 
@@ -34,7 +34,7 @@ const imageTransformer = (image: Image): Image => {
       },
       [{
         content: `<p>Test image transformation</p>
-                 <img src="https://example.com/test.jpg">`
+                 <img src="http://orig10.deviantart.net/e272/f/2013/255/0/0/alice_in_wonderland_book_cover_by_pannucabaguana-d6m003p.jpg">`
       }]
     );
 
