@@ -41,6 +41,7 @@ export const optionsDefaults = (version = 3): Omit<Options, 'title'> => ({
   batchSize: 100,
   ignoreFailedDownloads: false,
   verbose: false,
+  imageProxyUrl: undefined,
 });
 
 export const chapterDefaults = (index: number) => ({
