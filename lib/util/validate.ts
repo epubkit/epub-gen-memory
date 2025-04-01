@@ -50,7 +50,6 @@ export type Options = {
   urlValidator?: UrlValidator,
   imageFetcherHeaders?: (url: string) => Record<string, string>,
   imageTransformer?: (image: Image) => Image,
-  imageProxyUrl?: string,
 };
 
 const name = ow.optional.any(ow.string, ow.array.ofType(ow.string), ow.undefined);
@@ -97,7 +96,6 @@ export const optionsPredicate: ObjectPredicate<Options> = ow.object.partialShape
   batchSize: ow.optional.number.positive,
   ignoreFailedDownloads: ow.optional.boolean,
   verbose: ow.optional.any(ow.boolean, ow.function as Predicate<LogFn>),
-  imageProxyUrl: ow.optional.string,
 });
 
 

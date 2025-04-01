@@ -145,14 +145,7 @@ export class EPub {
         this.images.slice(i, i + this.options.batchSize).map(image => {
           const transformedImage = this.options.imageTransformer?.(image) || image
 
-          // Use proxy URL if specified, otherwise use the original URL
-          let imageUrl = transformedImage.url;
-          if (this.options.imageProxyUrl) {
-            imageUrl = `${this.options.imageProxyUrl}/?url=${encodeURIComponent(transformedImage.url)}`;
-            this.log(`Using proxy URL for image: ${imageUrl}`);
-          }
-
-          const d = retryFetch(imageUrl, this.options.fetchTimeout, this.options.retryTimes, this.log, {
+          const d = retryFetch(transformedImage.url, this.options.fetchTimeout, this.options.retryTimes, this.log, {
             headers: this.options.imageFetcherHeaders?.(transformedImage.url),
             urlValidator: this.options.urlValidator
           })
@@ -172,14 +165,7 @@ export class EPub {
     let coverContent: Buffer | string = ""
 
     if (this.options.cover.startsWith('http')) {
-      // Use proxy URL if specified, otherwise use the original URL
-      let coverUrl = this.options.cover;
-      if (this.options.imageProxyUrl) {
-        coverUrl = `${this.options.imageProxyUrl}/?url=${encodeURIComponent(this.options.cover)}`;
-        this.log(`Using proxy URL for cover: ${coverUrl}`);
-      }
-
-      coverContent = await retryFetch(coverUrl, this.options.fetchTimeout, this.options.retryTimes, this.log, {
+      coverContent = await retryFetch(this.options.cover, this.options.fetchTimeout, this.options.retryTimes, this.log, {
         urlValidator: this.options.urlValidator
       })
         .catch(reason => (this.warn(`Warning (cover ${this.options.cover}): Download failed`, reason), ''));
