@@ -144,6 +144,7 @@ export class EPub {
       const imageContents = await Promise.all(
         this.images.slice(i, i + this.options.batchSize).map(image => {
           const transformedImage = this.options.imageTransformer?.(image) || image
+
           const d = retryFetch(transformedImage.url, this.options.fetchTimeout, this.options.retryTimes, this.log, {
             headers: this.options.imageFetcherHeaders?.(transformedImage.url),
             urlValidator: this.options.urlValidator
